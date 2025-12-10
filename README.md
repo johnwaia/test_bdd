@@ -119,6 +119,7 @@ DELETE /api/games/:id
 ```
 
 ---
+[▶️ Voir la vidéo de démonstration](./démo.mp4)
 
 ## 🧪 Tests avec Postman
 
