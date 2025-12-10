@@ -3,23 +3,21 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const usersRoutes = require('./routes/users');
-const contactsRoutes = require('./routes/contacts');
-const Contact = require('./models/contact'); // pour syncIndexes()
+const gameRoutes = require('./routes/games');
+const Game = require('./models/games');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-
 const ALLOWED_ORIGINS = [
   'http://localhost:3000',
   'http://localhost:8080',
-  'https://radiant-alfajores-52e968.netlify.app', // site Netlify
+  'https://radiant-alfajores-52e968.netlify.app',
 ];
 
 const corsOptions = {
   origin(origin, cb) {
-    if (!origin) return cb(null, true); 
+    if (!origin) return cb(null, true);
     try {
       const host = new URL(origin).hostname;
       const isNetlifyPreview = /\.netlify\.app$/.test(host);
@@ -31,28 +29,26 @@ const corsOptions = {
   },
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: false, 
+  credentials: false,
 };
 
 app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(204);
-  }
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
 });
 
 app.use(express.json());
+
 app.use((req, _res, next) => {
   console.log(`${req.method} ${req.path}`);
   next();
 });
 
-app.get('/', (_req, res) => res.send('API OK'));
+app.get('/', (_req, res) => res.send('API OK ✅'));
 
-app.use('/api/users', usersRoutes);
-app.use('/api', contactsRoutes);
+app.use('/api', gameRoutes);
 
 const uri = process.env.MONGO_URI;
 if (!uri) {
@@ -66,10 +62,10 @@ mongoose
     console.log('✅ MongoDB connecté');
 
     try {
-      await Contact.syncIndexes();
-      console.log('✅ Indexes synchronisés');
+      await Game.syncIndexes();
+      console.log('✅ Indexes Game synchronisés');
     } catch (e) {
-      console.error('⚠️ Échec syncIndexes:', e?.message || e);
+      console.error('⚠️ Erreur syncIndexes Game:', e?.message || e);
     }
 
     app.listen(PORT, '0.0.0.0', () => {

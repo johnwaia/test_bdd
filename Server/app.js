@@ -1,9 +1,7 @@
-// app.js
 const express = require('express');
 const cors = require('cors');
 
-const usersRoutes = require('./routes/users');
-const contactsRoutes = require('./routes/contacts');
+const gameRoutes = require('./routes/games');
 
 const app = express();
 
@@ -15,9 +13,9 @@ app.use(cors({
 }));
 
 app.use(express.json());
-app.get('/', (_req, res) => res.send('API OK'));
 
-app.use('/api/users', usersRoutes);
-app.use('/api', contactsRoutes);
+app.get('/', (_req, res) => res.send('API OK ✅'));
+
+app.use('/api', gameRoutes);
 
 module.exports = app;
